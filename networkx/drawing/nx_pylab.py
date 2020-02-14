@@ -667,14 +667,17 @@ def draw_networkx_edges(G, pos,
             else:
                 line_width = width
 
-            arrow = FancyArrowPatch((x1, y1), (x2, y2),
-                                    arrowstyle=arrowstyle,
-                                    shrinkA=shrink_source,
-                                    shrinkB=shrink_target,
-                                    mutation_scale=mutation_scale,
+            from matplotlib.patches import FancyArrow
+            arrow = FancyArrow(x1, y1, x2 - x1, y2 - y1,
+                                    width=0.1,
+                                    length_includes_head=True,
+                                    # arrowstyle=arrowstyle,
+                                    # shrinkA=shrink_source,
+                                    # shrinkB=shrink_target,
+                                    # mutation_scale=mutation_scale,
                                     color=arrow_color,
                                     linewidth=line_width,
-                                    connectionstyle=connectionstyle,
+                                    # connectionstyle=connectionstyle,
                                     linestyle=style,
                                     zorder=1)  # arrows go behind nodes
 
@@ -682,7 +685,10 @@ def draw_networkx_edges(G, pos,
             # FancyArrowPatch instances. Until fixed, the patches are added
             # individually to the axes instance.
             arrow_collection.append(arrow)
-            ax.add_patch(arrow)
+            # ax.add_patch(arrow)
+    from matplotlib.collections import PatchCollection
+    patches = PatchCollection(arrow_collection, match_original=True)
+    ax.add_collection(patches)
 
     # update view
     minx = np.amin(np.ravel(edge_pos[:, :, 0]))
